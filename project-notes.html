@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spring Boot Project - Learning Notes</title>
+    <style>
+        :root {
+            --primary: #6db33f;
+            --primary-dark: #5a9e2f;
+            --bg: #1a1a2e;
+            --bg-card: #16213e;
+            --bg-code: #0f3460;
+            --text: #e6e6e6;
+            --text-muted: #a0a0b0;
+            --border: #2a2a4a;
+            --accent-blue: #4fc3f7;
+            --accent-orange: #ffb74d;
+            --accent-pink: #f48fb1;
+            --accent-green: #81c784;
+            --accent-purple: #b39ddb;
+            --accent-red: #ef9a9a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 280px;
+            height: 100vh;
+            background: var(--bg-card);
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
+            padding: 20px 0;
+            z-index: 100;
+        }
+
+        .sidebar h2 {
+            padding: 0 20px 15px;
+            font-size: 1.1rem;
+            color: var(--primary);
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 10px;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 8px 20px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .sidebar a:hover, .sidebar a.active {
+            background: var(--bg-code);
+            color: var(--primary);
+            border-left: 3px solid var(--primary);
+        }
+
+        .sidebar .section-label {
+            padding: 12px 20px 4px;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--accent-purple);
+            font-weight: bold;
+        }
+
+        .main {
+            margin-left: 280px;
+            padding: 40px 50px;
+            max-width: 1100px;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1rem;
+            margin-bottom: 40px;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            color: var(--accent-blue);
+            margin: 40px 0 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        h3 {
+            font-size: 1.15rem;
+            color: var(--accent-orange);
+            margin: 25px 0 10px;
+        }
+
+        h4 {
+            font-size: 1rem;
+            color: var(--accent-pink);
+            margin: 15px 0 8px;
+        }
+
+        p {
+            margin-bottom: 12px;
+            color: var(--text-muted);
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 20px 25px;
+            margin: 15px 0;
+        }
+
+        .card.highlight {
+            border-left: 4px solid var(--primary);
+        }
+
+        .card.info {
+            border-left: 4px solid var(--accent-blue);
+        }
+
+        .card.warning {
+            border-left: 4px solid var(--accent-orange);
+        }
+
+        .card.danger {
+            border-left: 4px solid var(--accent-red);
+        }
+
+        pre {
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 18px;
+            overflow-x: auto;
+            margin: 12px 0;
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        code {
+            font-family: 'Consolas', 'Courier New', monospace;
+            color: var(--accent-green);
+        }
+
+        pre code {
+            color: var(--text);
+        }
+
+        .inline-code {
+            background: var(--bg-code);
+            padding: 2px 7px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            color: var(--accent-green);
+            font-family: 'Consolas', monospace;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            margin: 2px 4px 2px 0;
+        }
+
+        .tag.green { background: #1b5e20; color: #a5d6a7; }
+        .tag.blue { background: #0d47a1; color: #90caf9; }
+        .tag.orange { background: #e65100; color: #ffcc80; }
+        .tag.purple { background: #4a148c; color: #ce93d8; }
+        .tag.pink { background: #880e4f; color: #f48fb1; }
+
+        .flow-diagram {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 20px 0;
+            padding: 25px;
+            background: var(--bg-card);
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+
+        .flow-box {
+            background: var(--bg-code);
+            border: 2px solid var(--primary);
+            border-radius: 8px;
+            padding: 12px 18px;
+            text-align: center;
+            min-width: 120px;
+        }
+
+        .flow-box .label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            display: block;
+        }
+
+        .flow-box .name {
+            font-weight: bold;
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+
+        .flow-arrow {
+            font-size: 1.5rem;
+            color: var(--accent-orange);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        th, td {
+            padding: 10px 14px;
+            text-align: left;
+            border: 1px solid var(--border);
+        }
+
+        th {
+            background: var(--bg-code);
+            color: var(--accent-blue);
+            font-size: 0.85rem;
+        }
+
+        td {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .endpoint {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 8px 0;
+            padding: 10px 15px;
+            background: var(--bg-card);
+            border-radius: 6px;
+            border: 1px solid var(--border);
+        }
+
+        .method {
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.75rem;
+            min-width: 70px;
+            text-align: center;
+        }
+
+        .method.get { background: #1b5e20; color: #a5d6a7; }
+        .method.post { background: #0d47a1; color: #90caf9; }
+        .method.put { background: #e65100; color: #ffcc80; }
+        .method.delete { background: #b71c1c; color: #ef9a9a; }
+
+        .endpoint .path {
+            font-family: Consolas, monospace;
+            color: var(--text);
+            font-size: 0.9rem;
+        }
+
+        .endpoint .desc {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            margin-left: auto;
+        }
+
+        .annotation-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 15px 0;
+        }
+
+        .annotation-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 16px;
+        }
+
+        .annotation-item .ann {
+            font-family: Consolas, monospace;
+            color: var(--accent-green);
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .annotation-item .ann-desc {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            margin-top: 4px;
+        }
+
+        .toggle-btn {
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            color: var(--accent-blue);
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            margin: 5px 4px 5px 0;
+            transition: all 0.2s;
+        }
+
+        .toggle-btn:hover {
+            background: var(--primary-dark);
+            color: white;
+        }
+
+        .toggle-content {
+            display: none;
+            margin-top: 10px;
+        }
+
+        .toggle-content.show {
+            display: block;
+        }
+
+        .key-concept {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary-dark), var(--bg-code));
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin: 3px;
+            border: 1px solid var(--primary);
+        }
+
+        .architecture-layer {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin: 20px 0;
+        }
+
+        .layer {
+            padding: 14px 20px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            position: relative;
+        }
+
+        .layer.controller { background: linear-gradient(90deg, #1a237e 0%, #283593 100%); border: 1px solid #5c6bc0; }
+        .layer.service { background: linear-gradient(90deg, #1b5e20 0%, #2e7d32 100%); border: 1px solid #66bb6a; }
+        .layer.repository { background: linear-gradient(90deg, #e65100 0%, #ef6c00 100%); border: 1px solid #ffa726; }
+        .layer.database { background: linear-gradient(90deg, #4a148c 0%, #6a1b9a 100%); border: 1px solid #ab47bc; }
+
+        .layer .layer-label {
+            font-size: 0.7rem;
+            opacity: 0.7;
+            display: block;
+        }
+
+        ul {
+            margin: 8px 0 15px 20px;
+        }
+
+        li {
+            color: var(--text-muted);
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 900px) {
+            .sidebar { display: none; }
+            .main { margin-left: 0; padding: 20px; }
+            .annotation-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="sidebar">
+    <h2>Spring Boot Notes</h2>
+    <div class="section-label">Getting Started</div>
+    <a href="#overview">Project Overview</a>
+    <a href="#dependencies">Dependencies (pom.xml)</a>
+    <a href="#architecture">Architecture</a>
+
+    <div class="section-label">Layer by Layer</div>
+    <a href="#application">Main Application</a>
+    <a href="#model">Model (Entity)</a>
+    <a href="#repository">Repository</a>
+    <a href="#service">Service</a>
+    <a href="#controller">Controller</a>
+    <a href="#dto">DTOs</a>
+    <a href="#mapper">Mapper</a>
+
+    <div class="section-label">Security & Config</div>
+    <a href="#security">Security Config</a>
+    <a href="#properties">Application Properties</a>
+
+    <div class="section-label">Reference</div>
+    <a href="#annotations">All Annotations</a>
+    <a href="#api">API Endpoints</a>
+    <a href="#flow">Request Flow</a>
+    <a href="#concepts">Key Concepts</a>
+</nav>
+
+<div class="main">
+
+    <h1 id="overview">Spring Boot Project - Learning Notes</h1>
+    <p class="subtitle">A User Management REST API with Spring Boot 3.5, JPA, PostgreSQL & Security</p>
+
+    <div class="card highlight">
+        <h3>What does this project do?</h3>
+        <p>This is a <strong>User Management API</strong> that lets you Create, Read, Update, and Delete (CRUD) users. It stores data in a PostgreSQL database and has basic security configured.</p>
+        <p style="margin-bottom:0"><strong>Tech Stack:</strong></p>
+        <span class="tag green">Spring Boot 3.5</span>
+        <span class="tag blue">Spring Data JPA</span>
+        <span class="tag purple">PostgreSQL</span>
+        <span class="tag pink">Spring Security</span>
+        <span class="tag orange">Lombok</span>
+        <span class="tag blue">JWT (jjwt)</span>
+    </div>
+
+    <!-- DEPENDENCIES -->
+    <h2 id="dependencies">pom.xml - Dependencies Explained</h2>
+    <p>The <code class="inline-code">pom.xml</code> is Maven's project descriptor. Each dependency pulls in a specific capability:</p>
+
+    <table>
+        <thead>
+            <tr><th>Dependency</th><th>What it does</th><th>Why we need it</th></tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code class="inline-code">spring-boot-starter-web</code></td>
+                <td>Provides embedded Tomcat, Spring MVC, REST support</td>
+                <td>To build REST APIs with <code class="inline-code">@RestController</code></td>
+            </tr>
+            <tr>
+                <td><code class="inline-code">spring-boot-starter-data-jpa</code></td>
+                <td>Provides Hibernate + Spring Data JPA</td>
+                <td>To map Java objects to database tables (ORM)</td>
+            </tr>
+            <tr>
+                <td><code class="inline-code">spring-boot-starter-security</code></td>
+                <td>Provides authentication & authorization</td>
+                <td>To secure endpoints and hash passwords</td>
+            </tr>
+            <tr>
+                <td><code class="inline-code">postgresql</code></td>
+                <td>JDBC driver for PostgreSQL database</td>
+                <td>To connect Java app to PostgreSQL</td>
+            </tr>
+            <tr>
+                <td><code class="inline-code">lombok</code></td>
+                <td>Auto-generates getters, setters, constructors, builders</td>
+                <td>To write less boilerplate code</td>
+            </tr>
+            <tr>
+                <td><code class="inline-code">jjwt-api / jjwt-impl / jjwt-jackson</code></td>
+                <td>JWT token creation and parsing library</td>
+                <td>For token-based authentication (not fully used yet)</td>
+            </tr>
+            <tr>
+                <td><code class="inline-code">spring-boot-starter-test</code></td>
+                <td>Testing framework (JUnit, Mockito, etc.)</td>
+                <td>To write unit & integration tests</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="card info">
+        <h4>Lombok note</h4>
+        <p style="margin-bottom:0">Lombok is configured as an <strong>annotation processor</strong> in the Maven compiler plugin (lines 94-130 of pom.xml). This means Lombok runs at compile time and generates the getter/setter/builder bytecode into your .class files.</p>
+    </div>
+
+    <!-- ARCHITECTURE -->
+    <h2 id="architecture">Architecture - Layered Design</h2>
+    <p>This project follows the standard <strong>3-tier layered architecture</strong>:</p>
+
+    <div class="architecture-layer">
+        <div class="layer controller">
+            <span class="layer-label">HTTP Request comes here first</span>
+            Controller Layer (UserController)
+        </div>
+        <div class="layer service">
+            <span class="layer-label">Business logic lives here</span>
+            Service Layer (UserService)
+        </div>
+        <div class="layer repository">
+            <span class="layer-label">Database queries generated here</span>
+            Repository Layer (UserRepository)
+        </div>
+        <div class="layer database">
+            <span class="layer-label">Actual data stored here</span>
+            PostgreSQL Database (users table)
+        </div>
+    </div>
+
+    <div class="card">
+        <h4>Why layered?</h4>
+        <ul>
+            <li><strong>Separation of concerns:</strong> Each layer has one job</li>
+            <li><strong>Testability:</strong> You can test service layer without HTTP</li>
+            <li><strong>Maintainability:</strong> Change DB without touching controller</li>
+            <li><strong>Reusability:</strong> Same service can be used by multiple controllers</li>
+        </ul>
+    </div>
+
+    <!-- MAIN APPLICATION -->
+    <h2 id="application">Main Application Class</h2>
+    <div class="card">
+        <h4>SpringPracticeApplication.java</h4>
+        <pre><code>@SpringBootApplication
+public class SpringPracticeApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(SpringPracticeApplication.class, args);
+    }
+}</code></pre>
+
+        <h4>What each part does:</h4>
+        <ul>
+            <li><code class="inline-code">@SpringBootApplication</code> = Convenience annotation that combines:
+                <ul>
+                    <li><code class="inline-code">@Configuration</code> - Marks this class as a source of bean definitions</li>
+                    <li><code class="inline-code">@EnableAutoConfiguration</code> - Tells Spring Boot to auto-configure based on dependencies</li>
+                    <li><code class="inline-code">@ComponentScan</code> - Scans all packages below for Spring components</li>
+                </ul>
+            </li>
+            <li><code class="inline-code">SpringApplication.run()</code> - Bootstraps the entire Spring context, starts embedded Tomcat on port 8081</li>
+        </ul>
+    </div>
+
+    <!-- MODEL -->
+    <h2 id="model">Model Layer - User Entity</h2>
+    <div class="card highlight">
+        <h4>User.java - The Entity</h4>
+        <pre><code>@Entity
+@Table(name = "users")
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, unique = true)
+    private String username;
+
+    @Column(nullable = false)
+    private String password;
+
+    @Column(nullable = false, unique = true)
+    private String email;
+
+    private String firstName;
+    private String lastName;
+
+    @Builder.Default
+    private boolean enabled = true;
+}</code></pre>
+    </div>
+
+    <h4>Annotation Breakdown:</h4>
+    <div class="annotation-grid">
+        <div class="annotation-item">
+            <div class="ann">@Entity</div>
+            <div class="ann-desc">Tells JPA: "This class maps to a database table"</div>
+        </div>
+        <div class="annotation-item">
+            <div class="ann">@Table(name = "users")</div>
+            <div class="ann-desc">Table name in DB. Without this, it would be "user"</div>
+        </div>
+        <div class="annotation-item">
+            <div class="ann">@Id</div>
+            <div class="ann-desc">Marks this field as the primary key</div>
+        </div>
+        <div class="annotation-item">
+            <div class="ann">@GeneratedValue(IDENTITY)</div>
+            <div class="ann-desc">Auto-increment. DB generates the ID automatically</div>
+        </div>
+        <div class="annotation-item">
+            <div class="ann">@Column(nullable=false, unique=true)</div>
+            <div class="ann-desc">DB constraint: cannot be null, must be unique</div>
+        </div>
+        <div class="annotation-item">
+            <div class="ann">@Builder.Default</div>
+            <div class="ann-desc">Sets default value when using Builder pattern</div>
+        </div>
+    </div>
+
+    <div class="card info">
+        <h4>Lombok Annotations on this class:</h4>
+        <ul>
+            <li><code class="inline-code">@Getter</code> - Generates <code class="inline-code">getId()</code>, <code class="inline-code">getUsername()</code>, etc.</li>
+            <li><code class="inline-code">@Setter</code> - Generates <code class="inline-code">setId()</code>, <code class="inline-code">setUsername()</code>, etc.</li>
+            <li><code class="inline-code">@NoArgsConstructor</code> - Creates <code class="inline-code">User()</code> constructor (needed by JPA)</li>
+            <li><code class="inline-code">@AllArgsConstructor</code> - Creates constructor with all fields</li>
+            <li><code class="inline-code">@Builder</code> - Enables <code class="inline-code">User.builder().username("x").build()</code> pattern</li>
+        </ul>
+    </div>
+
+    <p>This class gets mapped to a <code class="inline-code">users</code> table in PostgreSQL. JPA/Hibernate auto-creates/updates the table based on <code class="inline-code">spring.jpa.hibernate.ddl-auto=update</code>.</p>
+
+    <!-- REPOSITORY -->
+    <h2 id="repository">Repository Layer</h2>
+    <div class="card highlight">
+        <h4>UserRepository.java</h4>
+        <pre><code>@Repository
+public interface UserRepository extends JpaRepository&lt;User, Long&gt; {
+    Optional&lt;User&gt; findByUsername(String username);
+    Optional&lt;User&gt; findByEmail(String email);
+    boolean existsByUsername(String username);
+    boolean existsByEmail(String email);
+}</code></pre>
+    </div>
+
+    <h4>What's happening here:</h4>
+    <ul>
+        <li><code class="inline-code">@Repository</code> - Marks this as a Spring-managed bean for database operations. Also translates JDBC exceptions into Spring's DataAccessException.</li>
+        <li><code class="inline-code">JpaRepository&lt;User, Long&gt;</code> - Extends CRUD repository. You get these methods <strong>for free</strong>:
+            <ul>
+                <li><code class="inline-code">findAll()</code> - SELECT * FROM users</li>
+                <li><code class="inline-code">findById(Long id)</code> - SELECT * FROM users WHERE id = ?</li>
+                <li><code class="inline-code">save(User)</code> - INSERT or UPDATE</li>
+                <li><code class="inline-code">deleteById(Long id)</code> - DELETE FROM users WHERE id = ?</li>
+                <li><code class="inline-code">count()</code>, <code class="inline-code">existsById()</code>, etc.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <div class="card warning">
+        <h4>Spring Data JPA Magic - Query Derivation</h4>
+        <p style="margin-bottom:0">Notice we don't write SQL! Spring Data JPA derives the query from the method name:</p>
+        <ul>
+            <li><code class="inline-code">findByUsername(String username)</code> &rarr; <code>SELECT * FROM users WHERE username = ?</code></li>
+            <li><code class="inline-code">existsByEmail(String email)</code> &rarr; <code>SELECT COUNT(*) > 0 FROM users WHERE email = ?</code></li>
+        </ul>
+        <p style="margin-bottom:0">The method name structure: <code class="inline-code">[findBy|existsBy|countBy|deleteBy][Field][And|Or][Field]</code></p>
+    </div>
+
+    <!-- SERVICE -->
+    <h2 id="service">Service Layer - Business Logic</h2>
+    <div class="card highlight">
+        <h4>UserService.java</h4>
+        <pre><code>@Service
+@RequiredArgsConstructor
+public class UserService {
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    public List&lt;User&gt; getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    public Optional&lt;User&gt; getUserById(Long id) {
+        return userRepository.findById(id);
+    }
+
+    public User createUser(User user) {
+        if (userRepository.existsByUsername(user.getUsername())) {
+            throw new RuntimeException("Username already exists");
+        }
+        if (userRepository.existsByEmail(user.getEmail())) {
+            throw new RuntimeException("Email already exists");
+        }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return userRepository.save(user);
+    }
+
+    public User updateUser(Long id, User userDetails) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        user.setFirstName(userDetails.getFirstName());
+        user.setLastName(userDetails.getLastName());
+        user.setEmail(userDetails.getEmail());
+        return userRepository.save(user);
+    }
+
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
+    }
+}</code></pre>
+    </div>
+
+    <h4>Key concepts in this class:</h4>
+    <div class="card">
+        <p><strong><code class="inline-code">@Service</code></strong> - Marks this as a service bean. Functionally same as <code class="inline-code">@Component</code>, but semantically indicates business logic.</p>
+        <p><strong><code class="inline-code">@RequiredArgsConstructor</code></strong> - Lombok generates a constructor for all <code class="inline-code">final</code> fields. Spring uses this for <strong>dependency injection</strong> (constructor injection - the recommended way).</p>
+        <p style="margin-bottom:0"><strong><code class="inline-code">PasswordEncoder</code></strong> - Injected by Spring Security's configuration. Used to hash passwords with BCrypt before saving to DB.</p>
+    </div>
+
+    <h4>Method-by-method breakdown:</h4>
+    <table>
+        <thead><tr><th>Method</th><th>What it does</th></tr></thead>
+        <tbody>
+            <tr><td><code class="inline-code">getAllUsers()</code></td><td>Returns all users from DB. Delegates to <code class="inline-code">JpaRepository.findAll()</code></td></tr>
+            <tr><td><code class="inline-code">getUserById(id)</code></td><td>Returns a single user wrapped in Optional (could be empty if not found)</td></tr>
+            <tr><td><code class="inline-code">createUser(user)</code></td><td>1. Checks if username/email already exists<br>2. Hashes the password<br>3. Saves to DB</td></tr>
+            <tr><td><code class="inline-code">updateUser(id, details)</code></td><td>Finds existing user, updates only firstName, lastName, email (not username/password)</td></tr>
+            <tr><td><code class="inline-code">deleteUser(id)</code></td><td>Deletes user by ID</td></tr>
+        </tbody>
+    </table>
+
+    <div class="card warning">
+        <h4>Important Pattern: Password Hashing</h4>
+        <p style="margin-bottom:0"><code class="inline-code">passwordEncoder.encode(user.getPassword())</code> converts "mypassword123" into something like <code class="inline-code">$2a$10$N9qo8uLOickgx2ZMRZoMy...BCrypt hash</code>. This way, even if DB is hacked, passwords are safe. <strong>Never store plain text passwords!</strong></p>
+    </div>
+
+    <!-- CONTROLLER -->
+    <h2 id="controller">Controller Layer - REST API</h2>
+    <div class="card highlight">
+        <h4>UserController.java</h4>
+        <pre><code>@RestController
+@RequestMapping("/api/users")
+@RequiredArgsConstructor
+public class UserController {
+    private final UserService userService;
+
+    @GetMapping
+    public List&lt;UserResponse&gt; getAllUsers() {
+        return userService.getAllUsers().stream()
+                .map(UserMapper::toResponse)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity&lt;UserResponse&gt; getUserById(@PathVariable Long id) {
+        return userService.getUserById(id)
+                .map(UserMapper::toResponse)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping
+    public ResponseEntity&lt;UserResponse&gt; createUser(@RequestBody UserRequest request) {
+        try {
+            User user = UserMapper.toEntity(request);
+            User savedUser = userService.createUser(user);
+            return ResponseEntity.ok(UserMapper.toResponse(savedUser));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity&lt;UserResponse&gt; updateUser(@PathVariable Long id, @RequestBody UserRequest request) {
+        try {
+            User user = UserMapper.toEntity(request);
+            User updatedUser = userService.updateUser(id, user);
+            return ResponseEntity.ok(UserMapper.toResponse(updatedUser));
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity&lt;Void&gt; deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
+    }
+}</code></pre>
+    </div>
+
+    <h4>Key concepts:</h4>
+    <div class="card">
+        <p><strong><code class="inline-code">@RestController</code></strong> = <code class="inline-code">@Controller</code> + <code class="inline-code">@ResponseBody</code>. All methods return data directly (JSON), not view names.</p>
+        <p><strong><code class="inline-code">@RequestMapping("/api/users")</code></strong> - All endpoints in this controller start with <code class="inline-code">/api/users</code></p>
+        <p><strong><code class="inline-code">@PathVariable</code></strong> - Extracts value from URL path. <code class="inline-code">/api/users/5</code> &rarr; id = 5</p>
+        <p><strong><code class="inline-code">@RequestBody</code></strong> - Deserializes the JSON request body into a Java object</p>
+        <p style="margin-bottom:0"><strong><code class="inline-code">ResponseEntity</code></strong> - Wraps the response with HTTP status code. <code class="inline-code">ok()</code> = 200, <code class="inline-code">notFound()</code> = 404, <code class="inline-code">badRequest()</code> = 400, <code class="inline-code">noContent()</code> = 204</p>
+    </div>
+
+    <h4>Request-Response transformation pattern:</h4>
+    <div class="flow-diagram">
+        <div class="flow-box">
+            <span class="label">Client sends</span>
+            <span class="name">UserRequest</span>
+        </div>
+        <span class="flow-arrow">&rarr;</span>
+        <div class="flow-box">
+            <span class="label">Mapper converts to</span>
+            <span class="name">User (Entity)</span>
+        </div>
+        <span class="flow-arrow">&rarr;</span>
+        <div class="flow-box">
+            <span class="label">Service processes</span>
+            <span class="name">User (Entity)</span>
+        </div>
+        <span class="flow-arrow">&rarr;</span>
+        <div class="flow-box">
+            <span class="label">Mapper converts to</span>
+            <span class="name">UserResponse</span>
+        </div>
+        <span class="flow-arrow">&rarr;</span>
+        <div class="flow-box">
+            <span class="label">Client receives</span>
+            <span class="name">JSON Response</span>
+        </div>
+    </div>
+
+    <div class="card info">
+        <h4>Why separate UserRequest and UserResponse DTOs?</h4>
+        <ul>
+            <li><strong>UserRequest:</strong> What the client sends (includes password, no id, no enabled)</li>
+            <li><strong>UserResponse:</strong> What the client receives (includes id and enabled, no password!)</li>
+            <li style="margin-bottom:0"><strong>Security:</strong> Never expose the password hash in the API response</li>
+        </ul>
+    </div>
+
+    <!-- DTOs -->
+    <h2 id="dto">DTOs - Data Transfer Objects</h2>
+
+    <div class="card">
+        <h4>UserRequest.java (what client sends)</h4>
+        <pre><code>@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+public class UserRequest {
+    private String username;
+    private String password;
+    private String email;
+    private String firstName;
+    private String lastName;
+}</code></pre>
+    </div>
+
+    <div class="card">
+        <h4>UserResponse.java (what client receives)</h4>
+        <pre><code>@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+public class UserResponse {
+    private Long id;
+    private String username;
+    private String email;
+    private String firstName;
+    private String lastName;
+    private boolean enabled;
+}</code></pre>
+    </div>
+
+    <div class="card warning">
+        <h4>Notice the differences:</h4>
+        <table>
+            <tr><th>Field</th><th>UserRequest</th><th>UserResponse</th><th>User (Entity)</th></tr>
+            <tr><td>id</td><td>-</td><td>+</td><td>+</td></tr>
+            <tr><td>password</td><td>+</td><td>-</td><td>+</td></tr>
+            <tr><td>enabled</td><td>-</td><td>+</td><td>+</td></tr>
+        </table>
+        <p style="margin-bottom:0">DTOs act as a <strong>shield</strong> between your internal data model and the outside world.</p>
+    </div>
+
+    <!-- MAPPER -->
+    <h2 id="mapper">Mapper - UserMapper Utility</h2>
+    <div class="card highlight">
+        <h4>UserMapper.java</h4>
+        <pre><code>public class UserMapper {
+    public static User toEntity(UserRequest request) {
+        return User.builder()
+                .username(request.getUsername())
+                .password(request.getPassword())
+                .email(request.getEmail())
+                .firstName(request.getFirstName())
+                .lastName(request.getLastName())
+                .build();
+    }
+
+    public static UserResponse toResponse(User user) {
+        return UserResponse.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .enabled(user.isEnabled())
+                .build();
+    }
+}</code></pre>
+    </div>
+
+    <div class="card">
+        <p>This is a <strong>static utility class</strong> that converts between DTOs and Entity. Two methods:</p>
+        <ul>
+            <li><code class="inline-code">toEntity(UserRequest)</code> - Client JSON &rarr; Java Object (for saving)</li>
+            <li><code class="inline-code">toResponse(User)</code> - Java Object &rarr; Client JSON (for returning). Note: password is <strong>intentionally excluded</strong>.</li>
+        </ul>
+        <p style="margin-bottom:0">This keeps the controller clean and the conversion logic in one place.</p>
+    </div>
+
+    <!-- SECURITY -->
+    <h2 id="security">Security Configuration</h2>
+    <div class="card highlight">
+        <h4>SecurityConfig.java</h4>
+        <pre><code>@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+            .csrf(csrf -> csrf.disable())
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/api/users/**").permitAll()
+                .anyRequest().authenticated()
+            );
+        return http.build();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+}</code></pre>
+    </div>
+
+    <h4>What each part does:</h4>
+    <div class="card">
+        <p><strong><code class="inline-code">@Configuration</code></strong> - This class defines Spring beans (configuration)</p>
+        <p><strong><code class="inline-code">@EnableWebSecurity</code></strong> - Enables Spring Security's web security support</p>
+        <p><strong><code class="inline-code">csrf().disable()</code></strong> - Disables CSRF protection. Safe for stateless REST APIs (not browser-form apps)</p>
+        <p><strong><code class="inline-code">requestMatchers("/api/users/**").permitAll()</code></strong> - Anyone can access these endpoints without login</p>
+        <p><strong><code class="inline-code">anyRequest().authenticated()</code></strong> - All other endpoints require authentication</p>
+        <p style="margin-bottom:0"><strong><code class="inline-code">BCryptPasswordEncoder</code></strong> - A strong password hashing algorithm. Creates a Bean that <code class="inline-code">UserService</code> uses for password encoding.</p>
+    </div>
+
+    <div class="card info">
+        <h4>How Spring wires it together:</h4>
+        <p style="margin-bottom:0">SecurityConfig creates a <code class="inline-code">PasswordEncoder</code> bean &rarr; Spring finds it &rarr; injects it into <code class="inline-code">UserService</code> via constructor (<code class="inline-code">@RequiredArgsConstructor</code>). This is <strong>Dependency Injection</strong> in action!</p>
+    </div>
+
+    <!-- PROPERTIES -->
+    <h2 id="properties">Application Properties</h2>
+    <div class="card">
+        <pre><code>spring.application.name=spring-practice
+server.port=8081
+
+# PostgreSQL
+spring.datasource.url=jdbc:postgresql://localhost:5432/userdb
+spring.datasource.username=postgres
+spring.datasource.password=system123#
+
+# JPA
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true</code></pre>
+    </div>
+
+    <table>
+        <thead><tr><th>Property</th><th>Value</th><th>Meaning</th></tr></thead>
+        <tbody>
+            <tr><td><code class="inline-code">server.port</code></td><td>8081</td><td>App runs on port 8081 (default is 8080)</td></tr>
+            <tr><td><code class="inline-code">spring.datasource.url</code></td><td>jdbc:postgresql://...</td><td>Connection string to PostgreSQL DB named "userdb"</td></tr>
+            <tr><td><code class="inline-code">spring.jpa.hibernate.ddl-auto</code></td><td>update</td><td>Hibernate auto-updates DB schema to match entities. Safe for dev, <strong>dangerous in production!</strong></td></tr>
+            <tr><td><code class="inline-code">spring.jpa.show-sql</code></td><td>true</td><td>Prints SQL queries to console (for debugging)</td></tr>
+            <tr><td><code class="inline-code">spring.jpa.properties.hibernate.format_sql</code></td><td>true</td><td>Formats printed SQL for readability</td></tr>
+        </tbody>
+    </table>
+
+    <!-- ANNOTATIONS -->
+    <h2 id="annotations">All Annotations - Quick Reference</h2>
+    <table>
+        <thead><tr><th>Annotation</th><th>Used In</th><th>Purpose</th></tr></thead>
+        <tbody>
+            <tr><td><code class="inline-code">@SpringBootApplication</code></td><td>SpringPracticeApplication</td><td>Main entry point, auto-config + component scan</td></tr>
+            <tr><td><code class="inline-code">@Entity</code></td><td>User</td><td>Maps class to DB table</td></tr>
+            <tr><td><code class="inline-code">@Table</code></td><td>User</td><td>Specifies DB table name</td></tr>
+            <tr><td><code class="inline-code">@Id</code></td><td>User</td><td>Marks primary key</td></tr>
+            <tr><td><code class="inline-code">@GeneratedValue</code></td><td>User</td><td>Auto-generates primary key</td></tr>
+            <tr><td><code class="inline-code">@Column</code></td><td>User</td><td>Configures column constraints</td></tr>
+            <tr><td><code class="inline-code">@Repository</code></td><td>UserRepository</td><td>Marks data access layer bean</td></tr>
+            <tr><td><code class="inline-code">@Service</code></td><td>UserService</td><td>Marks business logic layer bean</td></tr>
+            <tr><td><code class="inline-code">@RestController</code></td><td>UserController</td><td>Marks REST API controller</td></tr>
+            <tr><td><code class="inline-code">@RequestMapping</code></td><td>UserController</td><td>Base URL path for all endpoints</td></tr>
+            <tr><td><code class="inline-code">@GetMapping</code></td><td>UserController</td><td>Handles HTTP GET requests</td></tr>
+            <tr><td><code class="inline-code">@PostMapping</code></td><td>UserController</td><td>Handles HTTP POST requests</td></tr>
+            <tr><td><code class="inline-code">@PutMapping</code></td><td>UserController</td><td>Handles HTTP PUT requests</td></tr>
+            <tr><td><code class="inline-code">@DeleteMapping</code></td><td>UserController</td><td>Handles HTTP DELETE requests</td></tr>
+            <tr><td><code class="inline-code">@PathVariable</code></td><td>UserController</td><td>Extracts value from URL path</td></tr>
+            <tr><td><code class="inline-code">@RequestBody</code></td><td>UserController</td><td>Deserializes JSON body to object</td></tr>
+            <tr><td><code class="inline-code">@Configuration</code></td><td>SecurityConfig</td><td>Marks as Spring config class</td></tr>
+            <tr><td><code class="inline-code">@EnableWebSecurity</code></td><td>SecurityConfig</td><td>Enables Spring Security</td></tr>
+            <tr><td><code class="inline-code">@Bean</code></td><td>SecurityConfig</td><td>Registers method return value as Spring bean</td></tr>
+        </tbody>
+    </table>
+
+    <!-- API -->
+    <h2 id="api">API Endpoints</h2>
+
+    <div class="endpoint">
+        <span class="method get">GET</span>
+        <span class="path">/api/users</span>
+        <span class="desc">Get all users</span>
+    </div>
+    <div class="endpoint">
+        <span class="method get">GET</span>
+        <span class="path">/api/users/{id}</span>
+        <span class="desc">Get user by ID</span>
+    </div>
+    <div class="endpoint">
+        <span class="method post">POST</span>
+        <span class="path">/api/users</span>
+        <span class="desc">Create new user</span>
+    </div>
+    <div class="endpoint">
+        <span class="method put">PUT</span>
+        <span class="path">/api/users/{id}</span>
+        <span class="desc">Update user</span>
+    </div>
+    <div class="endpoint">
+        <span class="method delete">DELETE</span>
+        <span class="path">/api/users/{id}</span>
+        <span class="desc">Delete user</span>
+    </div>
+
+    <h3>Example Request/Response:</h3>
+    <div class="card">
+        <h4>Create User (POST /api/users)</h4>
+        <pre><code>// Request Body (JSON):
+{
+    "username": "johndoe",
+    "password": "secret123",
+    "email": "john@example.com",
+    "firstName": "John",
+    "lastName": "Doe"
+}
+
+// Response (200 OK):
+{
+    "id": 1,
+    "username": "johndoe",
+    "email": "john@example.com",
+    "firstName": "John",
+    "lastName": "Doe",
+    "enabled": true
+}</code></pre>
+    </div>
+
+    <!-- FLOW -->
+    <h2 id="flow">Complete Request Flow</h2>
+    <p>What happens when a client sends <code class="inline-code">POST /api/users</code> with JSON body:</p>
+
+    <div class="card">
+        <div class="architecture-layer">
+            <div class="layer controller">
+                <span class="layer-label">Step 1</span>
+                UserController.createUser() receives HTTP request<br>
+                <small>@RequestBody deserializes JSON to UserRequest object</small>
+            </div>
+            <div class="layer" style="background: linear-gradient(90deg, #4a148c, #6a1b9a); border: 1px solid #ab47bc;">
+                <span class="layer-label">Step 2</span>
+                UserMapper.toEntity(request) converts UserRequest &rarr; User entity
+            </div>
+            <div class="layer service">
+                <span class="layer-label">Step 3</span>
+                UserService.createUser(user) is called<br>
+                <small>Checks username/email uniqueness, hashes password</small>
+            </div>
+            <div class="layer repository">
+                <span class="layer-label">Step 4</span>
+                UserRepository.save(user) generates and executes SQL INSERT
+            </div>
+            <div class="layer database">
+                <span class="layer-label">Step 5</span>
+                PostgreSQL saves the row, returns generated ID
+            </div>
+            <div class="layer" style="background: linear-gradient(90deg, #4a148c, #6a1b9a); border: 1px solid #ab47bc;">
+                <span class="layer-label">Step 6</span>
+                UserMapper.toResponse(savedUser) converts User &rarr; UserResponse (without password)
+            </div>
+            <div class="layer controller">
+                <span class="layer-label">Step 7</span>
+                ResponseEntity.ok(response) sends 200 OK with JSON body
+            </div>
+        </div>
+    </div>
+
+    <!-- CONCEPTS -->
+    <h2 id="concepts">Key Concepts Summary</h2>
+
+    <div class="card">
+        <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 15px;">
+            <span class="key-concept">Dependency Injection</span>
+            <span class="key-concept">Inversion of Control</span>
+            <span class="key-concept">REST API</span>
+            <span class="key-concept">CRUD Operations</span>
+            <span class="key-concept">ORM (JPA/Hibernate)</span>
+            <span class="key-concept">DTO Pattern</span>
+            <span class="key-concept">Builder Pattern</span>
+            <span class="key-concept">Password Hashing</span>
+            <span class="key-concept">Auto-Configuration</span>
+            <span class="key-concept">Bean Lifecycle</span>
+            <span class="key-concept">Query Derivation</span>
+            <span class="key-concept">Layered Architecture</span>
+        </div>
+
+        <h4>How Spring Boot Auto-Wiring Works in This Project:</h4>
+        <pre><code>1. Spring starts up
+2. Finds @SpringBootApplication → scans all packages
+3. Finds @Configuration classes (SecurityConfig)
+4. Finds @Entity (User) → maps to DB table
+5. Finds @Repository (UserRepository) → creates bean, connects to DB
+6. Finds @Service (UserService) → needs UserRepository + PasswordEncoder
+   → Spring injects them via constructor (@RequiredArgsConstructor)
+7. Finds @RestController (UserController) → needs UserService
+   → Spring injects it via constructor
+8. App is ready to handle HTTP requests!</code></pre>
+    </div>
+
+    <div class="card info">
+        <h4>Next Steps to Improve This Project:</h4>
+        <ul>
+            <li>Add custom exception handling with <code class="inline-code">@ControllerAdvice</code></li>
+            <li>Implement JWT authentication (jjwt dependency is already there!)</li>
+            <li>Add input validation with <code class="inline-code">@Valid</code> and Bean Validation</li>
+            <li>Add pagination with <code class="inline-code">Pageable</code></li>
+            <li>Write unit tests with JUnit 5 and Mockito</li>
+            <li>Add Swagger/OpenAPI documentation</li>
+            <li>Use <code class="inline-code">spring.jpa.hibernate.ddl-auto=validate</code> in production</li>
+        </ul>
+    </div>
+
+    <div class="card" style="text-align: center; margin-top: 40px;">
+        <p style="margin-bottom: 5px; color: var(--primary); font-weight: bold;">Generated from your Spring Boot project</p>
+        <p style="margin-bottom: 0; font-size: 0.85rem;">spring-practice | Spring Boot 3.5 | Java 17 | PostgreSQL</p>
+    </div>
+</div>
+
+<script>
+    // Sidebar active state on scroll
+    const sections = document.querySelectorAll('h2[id], h1[id]');
+    const navLinks = document.querySelectorAll('.sidebar a');
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                navLinks.forEach(link => link.classList.remove('active'));
+                const activeLink = document.querySelector(`.sidebar a[href="#${entry.target.id}"]`);
+                if (activeLink) activeLink.classList.add('active');
+            }
+        });
+    }, { rootMargin: '-20% 0px -70% 0px' });
+
+    sections.forEach(section => observer.observe(section));
+
+    // Smooth scroll
+    navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const target = document.querySelector(link.getAttribute('href'));
+            if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+    });
+</script>
+
+</body>
+</html>
